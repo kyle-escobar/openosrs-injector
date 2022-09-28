@@ -14,10 +14,10 @@ plugins {
     `maven-publish`
 }
 
-val oprsver = "4.31.1"
+val oprsver = "2.0.0"
 
-group = "com.openosrs"
-version = "2.0.2"
+group = "net.unethicalite"
+version = "3.0.0"
 
 repositories {
     mavenCentral()
@@ -26,6 +26,7 @@ repositories {
         url = uri("https://repo.runelite.net")
         url = uri("https://raw.githubusercontent.com/open-osrs/hosting/master")
         url = uri("https://repo.openosrs.com/repository/maven")
+        url = uri("https://jitpack.io")
     }
 }
 
@@ -42,18 +43,18 @@ dependencies {
         exclude(group = "com.google.j2objc", module = "j2objc-annotations")
         exclude(group = "org.codehaus.mojo", module = "animal-sniffer-annotations")
     }
-    implementation("com.openosrs:deobfuscator:${oprsver}") {
+    implementation("net.unethicalite:deobfuscator:${oprsver}") {
         isTransitive = false
     }
 
-    testCompileOnly(group = "com.openosrs", name = "injection-annotations", version = "1.1")
+    testCompileOnly(group = "net.unethicalite", name = "injection-annotations", version = "1.1")
     testImplementation(group = "junit", name = "junit", version = "4.12")
 }
 
 gradlePlugin {
     plugins {
         create("injectorPlugin") {
-            id = "com.openosrs.injector"
+            id = "net.unethicalite.injector"
             implementationClass = "com.openosrs.injector.InjectPlugin"
         }
     }
@@ -81,9 +82,8 @@ val sourcesJar by tasks.registering(Jar::class) {
 
 publishing {
     repositories {
-        maven {
-            url = uri("$buildDir/repo")
-        }
+        mavenLocal()
+        maven { url = uri("$buildDir/repo") }
         if (System.getenv("REPO_URL") != null) {
             maven {
                 url = uri(System.getenv("REPO_URL"))
